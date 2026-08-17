@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '../services/api';
 
 interface User {
   id: string;
@@ -21,16 +22,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize from local storage on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      setIsAuthenticated(true);
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
       try {
-        setUser(JSON.parse(storedUser));
+        // Validate token with backend and get fresh user data
+        const { user: freshUser } = await api.getMe();
+        
+        setIsAuthenticated(true);
+        setUser(freshUser as User);
+        localStorage.setItem('user', JSON.stringify(freshUser));
       } catch (e) {
-        console.error("Failed to parse user from local storage", e);
+        console.error("Session restoration failed:", e);
+        // Token might be expired or invalid
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsAuthenticated(false);
+        setUser(null);
       }
-    }
+    };
+
+    initAuth();
   }, []);
 
   const login = (token: string, newUser: User) => {
