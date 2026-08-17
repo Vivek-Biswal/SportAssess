@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Activity, Menu, X } from 'lucide-react';
 import { Button } from '../common/Button';
+import { useAuth } from '../../context/AuthContext';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  // Temporary mock auth state
-  const isAuthenticated = false;
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsMobileMenuOpen(false);
+  };
 
   const publicLinks = [
     { name: 'Home', path: '/' },
@@ -57,7 +63,7 @@ export function Navbar() {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             {isAuthenticated ? (
-              <Button variant="outline" size="sm">Log Out</Button>
+              <Button variant="outline" size="sm" onClick={handleLogout}>Log Out</Button>
             ) : (
               <>
                 <Link to="/login">
@@ -72,6 +78,8 @@ export function Navbar() {
           <div className="-mr-2 flex items-center sm:hidden">
             <button
               onClick={toggleMobileMenu}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
               className="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
             >
               <span className="sr-only">Open main menu</span>
@@ -86,7 +94,7 @@ export function Navbar() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="sm:hidden">
+        <div className="sm:hidden" id="mobile-menu">
           <div className="pt-2 pb-3 space-y-1">
             {links.map((link) => (
               <Link
@@ -105,7 +113,7 @@ export function Navbar() {
           </div>
           <div className="pt-4 pb-3 border-t border-slate-200 px-4 flex flex-col space-y-2">
              {isAuthenticated ? (
-               <Button variant="outline" className="w-full justify-center">Log Out</Button>
+               <Button variant="outline" className="w-full justify-center" onClick={handleLogout}>Log Out</Button>
              ) : (
                <>
                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>

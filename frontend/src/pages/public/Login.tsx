@@ -4,9 +4,15 @@ import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/common/Card';
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 export function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { showToast } = useToast();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -15,11 +21,13 @@ export function Login() {
     setIsLoading(true);
     setError('');
     try {
-      // Mock login call
-      await api.login('test@example.com', 'password');
+      const response = await api.login(email, password);
+      login(response.token, response.user);
+      showToast('Successfully logged in!', 'success');
       navigate('/dashboard');
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to login. Please try again.');
+      showToast('Failed to login. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }

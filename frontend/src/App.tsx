@@ -6,13 +6,16 @@ import { Landing } from './pages/public/Landing';
 import { HowItWorks } from './pages/public/HowItWorks';
 import { Login } from './pages/public/Login';
 import { Register } from './pages/public/Register';
+import { Benchmarks } from './pages/public/Benchmarks';
 
 import { Dashboard } from './pages/athlete/Dashboard';
+import { MyAssessments } from './pages/athlete/MyAssessments';
 import { Profile } from './pages/athlete/Profile';
 import { AssessmentFlow } from './pages/athlete/AssessmentFlow';
 import { Result } from './pages/athlete/Result';
 
 import { Dashboard as OfficialDashboard } from './pages/official/Dashboard';
+import { Shortlist } from './pages/official/Shortlist';
 
 const NotFound = () => <div className="p-8 text-center"><h1>404 - Page Not Found</h1></div>;
 
@@ -24,17 +27,20 @@ function App() {
           {/* Public Routes */}
           <Route index element={<Landing />} />
           <Route path="how-it-works" element={<HowItWorks />} />
+          <Route path="benchmarks" element={<Benchmarks />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
           {/* Athlete Routes */}
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="my-assessments" element={<MyAssessments />} />
           <Route path="profile" element={<Profile />} />
           <Route path="assessments" element={<AssessmentFlow />} />
           <Route path="result/:id" element={<Result />} />
           
           {/* Official Routes */}
           <Route path="official" element={<OfficialDashboard />} />
+          <Route path="official/shortlist" element={<Shortlist />} />
           
           <Route path="*" element={<NotFound />} />
         </Route>
