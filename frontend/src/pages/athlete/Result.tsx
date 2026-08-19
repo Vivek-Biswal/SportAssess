@@ -64,8 +64,8 @@ export function Result() {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-        <Card className="md:col-span-2 glass-card">
-          <CardHeader className="pb-4 border-b border-slate-100/50">
+        <Card className="md:col-span-2">
+          <CardHeader className="pb-4 border-b border-slate-100">
             <div className="flex justify-between items-start">
               <div>
                 <CardTitle className="text-2xl font-extrabold text-slate-900">{result.testId === 't1' ? 'Vertical Jump' : 'Assessment'}</CardTitle>
@@ -76,38 +76,51 @@ export function Result() {
               </Badge>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center py-10 relative">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary-100/50 rounded-full blur-[80px] pointer-events-none"></div>
-              <div className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-700 mb-2 relative z-10 tracking-tighter">
-                {result.score} <span className="text-3xl text-slate-400 font-bold">{result.unit}</span>
+          <CardContent className="p-0">
+            {/* AI Annotated Frame Placeholder */}
+            <div className="relative w-full aspect-video bg-slate-900 overflow-hidden flex items-center justify-center">
+              <div className="absolute top-4 left-4 bg-black/60 backdrop-blur text-white/80 text-xs px-2 py-1 rounded border border-white/10 font-mono flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                AI KINEMATIC ANALYSIS
               </div>
-              <div className="mt-6 flex flex-wrap justify-center gap-4 relative z-10">
-                <Badge variant="neutral" className="text-sm bg-white/80 backdrop-blur-sm border-slate-200">
-                  <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-500 inline" /> AI Confidence: {result.aiConfidence}%
-                </Badge>
-                {result.cheatDetected ? (
-                   <Badge variant="danger" className="text-sm bg-white/80 backdrop-blur-sm border-red-200">
-                     <AlertTriangle className="w-4 h-4 mr-1.5 inline" /> Anomaly Detected
-                   </Badge>
-                ) : (
-                   <Badge variant="neutral" className="text-sm bg-white/80 backdrop-blur-sm border-slate-200">
-                     <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-500 inline" /> No anomaly detected
-                   </Badge>
-                )}
+              <div className="text-slate-500 flex flex-col items-center">
+                <Video className="w-12 h-12 mb-2 opacity-50" />
+                <span className="text-sm font-medium">Video frame with pose keypoints will appear here</span>
+                <span className="text-xs bg-slate-800 px-2 py-1 rounded mt-2 text-slate-400 border border-slate-700">Pending backend integration (Annotated Frame API)</span>
               </div>
             </div>
-            
-            <div className="border-t border-slate-100/50 pt-6 mt-2">
-              <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
-                <BarChart2 className="w-5 h-5 mr-2 text-primary-500" /> AI Performance Analysis
-              </h4>
-              <p className="text-slate-600 mb-6 leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-100">
-                Based on computer vision analysis of your movement, your takeoff phase was explosive, but arm swing coordination could be improved for an extra 2-3cm gain.
-              </p>
-              <div className="flex gap-3">
-                <Button variant="outline" className="bg-white"><Video className="w-4 h-4 mr-2"/> View Evidence</Button>
-                <Button variant="outline" className="bg-white"><BarChart2 className="w-4 h-4 mr-2"/> Download Report</Button>
+
+            <div className="p-6">
+              <div className="flex flex-col items-center justify-center py-6 relative">
+                <div className="text-7xl font-black text-slate-900 mb-2 relative z-10 tracking-tighter">
+                  {result.score} <span className="text-3xl text-slate-400 font-bold">{result.unit}</span>
+                </div>
+                <div className="mt-4 flex flex-wrap justify-center gap-4 relative z-10">
+                  <Badge variant="neutral" className="text-sm border-slate-200">
+                    <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-600 inline" /> AI Confidence: {result.aiConfidence}%
+                  </Badge>
+                  {result.cheatDetected ? (
+                     <Badge variant="danger" className="text-sm border-red-200">
+                       <AlertTriangle className="w-4 h-4 mr-1.5 inline" /> Integrity: Anomaly Detected
+                     </Badge>
+                  ) : (
+                     <Badge variant="neutral" className="text-sm border-slate-200">
+                       <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-600 inline" /> Integrity: Continuous Take Verified
+                     </Badge>
+                  )}
+                </div>
+              </div>
+              
+              <div className="border-t border-slate-100 pt-6 mt-2">
+                <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
+                  <BarChart2 className="w-5 h-5 mr-2 text-primary-600" /> Assessment Notes
+                </h4>
+                <p className="text-slate-600 mb-6 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                  Based on computer vision analysis of your movement, your takeoff phase was explosive, but arm swing coordination could be improved for an extra 2-3cm gain.
+                </p>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="bg-white"><BarChart2 className="w-4 h-4 mr-2"/> Download Report</Button>
+                </div>
               </div>
             </div>
           </CardContent>

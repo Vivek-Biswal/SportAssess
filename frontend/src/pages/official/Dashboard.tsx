@@ -239,7 +239,8 @@ export function Dashboard() {
                     <th className="pb-3 px-4">Location</th>
                     <th className="pb-3 px-4">Score</th>
                     <th className="pb-3 px-4">Percentile</th>
-                    <th className="pb-3 px-4">Action</th>
+                    <th className="pb-3 px-4">Integrity Status</th>
+                    <th className="pb-3 px-4 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,7 +253,7 @@ export function Dashboard() {
                       return a.age >= min && a.age <= max;
                     })
                     .filter(a => !filterState || a.state === filterState)
-                    .map((athlete) => (
+                    .map((athlete, index) => (
                     <tr key={athlete.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                       <td className="py-3 px-4">
                         <div className="font-medium text-slate-900">{athlete.name}</div>
@@ -269,12 +270,26 @@ export function Dashboard() {
                           {athlete.percentile}th
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 flex gap-2">
-                         <Button variant="ghost" size="sm">Review</Button>
-                         <Button variant="outline" size="sm">Shortlist</Button>
+                      <td className="py-3 px-4">
+                        {/* Mocking integrity status for demo purposes, since athlete type doesn't have it explicitly right now */}
+                        {index % 4 === 0 ? (
+                           <Badge variant="danger" className="text-xs bg-red-50 border-red-200 text-red-600"><X className="w-3 h-3 mr-1 inline"/> Flagged</Badge>
+                        ) : (
+                           <Badge variant="success" className="text-xs bg-green-50 border-green-200 text-green-700"><CheckCircle className="w-3 h-3 mr-1 inline"/> Verified</Badge>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 flex justify-end gap-2">
+                         <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700 hover:bg-primary-50">Review Video</Button>
                       </td>
                     </tr>
                   ))}
+                  {athletes.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="py-12 text-center text-slate-500">
+                        No athletes found matching the filters.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
