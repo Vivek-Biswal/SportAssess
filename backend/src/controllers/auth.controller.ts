@@ -32,8 +32,10 @@ export const register = async (req: Request, res: Response) => {
       return sendError(res, 400, 'VALIDATION_ERROR', 'Name, email, and password are required');
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Check if user exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return sendError(res, 400, 'USER_EXISTS', 'Email is already registered');
     }
@@ -45,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
     // Create user
     const user = await User.create({
       name,
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       passwordHash,
       role: role === 'official' ? 'official' : 'athlete',
       age,
@@ -75,15 +77,19 @@ export const login = async (req: Request, res: Response) => {
       return sendError(res, 400, 'VALIDATION_ERROR', 'Email and password are required');
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Find user
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
+      console.log('Login failed: User not found for email', normalizedEmail);
       return sendError(res, 401, 'INVALID_CREDENTIALS', 'Invalid email or password');
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      console.log('Login failed: Password mismatch for email', normalizedEmail);
       return sendError(res, 401, 'INVALID_CREDENTIALS', 'Invalid email or password');
     }
 
