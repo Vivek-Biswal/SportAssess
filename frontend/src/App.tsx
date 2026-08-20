@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
+import { ProtectedRoute } from './components/common/ProtectedRoute';
 
 import { Landing } from './pages/public/Landing';
 import { HowItWorks } from './pages/public/HowItWorks';
@@ -31,16 +32,19 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
-          {/* Athlete Routes */}
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="my-assessments" element={<MyAssessments />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="assessments" element={<AssessmentFlow />} />
-          <Route path="result/:id" element={<Result />} />
-          
-          {/* Official Routes */}
-          <Route path="official" element={<OfficialDashboard />} />
-          <Route path="official/shortlist" element={<Shortlist />} />
+          {/* Protected Routes — require authentication */}
+          <Route element={<ProtectedRoute />}>
+            {/* Athlete Routes */}
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="my-assessments" element={<MyAssessments />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="assessments" element={<AssessmentFlow />} />
+            <Route path="result/:id" element={<Result />} />
+            
+            {/* Official Routes */}
+            <Route path="official" element={<OfficialDashboard />} />
+            <Route path="official/shortlist" element={<Shortlist />} />
+          </Route>
           
           <Route path="*" element={<NotFound />} />
         </Route>

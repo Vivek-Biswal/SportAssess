@@ -47,21 +47,21 @@ export function Login() {
                 {error}
               </div>
             )}
-            <Input 
-              label="Email Address" 
-              type="email" 
-              placeholder="you@example.com" 
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
-            <Input 
-              label="Password" 
-              type="password" 
-              placeholder="••••••••" 
+            <Input
+              label="Password"
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
             />
             
             <div className="flex items-center justify-between text-sm">
@@ -74,6 +74,19 @@ export function Login() {
 
             <Button type="submit" className="w-full" isLoading={isLoading}>
               Log In
+            </Button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-slate-500">or</span>
+              </div>
+            </div>
+
+            <Button type="button" variant="outline" className="w-full" onClick={() => navigate('/')}>
+              Continue as Guest
             </Button>
             
             <p className="text-center text-sm text-slate-600 mt-4">
