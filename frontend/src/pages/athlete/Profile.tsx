@@ -1,100 +1,138 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
+import { StatCard } from '../../components/common/StatCard';
 import { api } from '../../services/api';
 import { Athlete } from '../../types';
-import { User, MapPin, Activity, Award } from 'lucide-react';
+import { User, MapPin, Activity, Award, AlertCircle, Trophy, TrendingUp } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export function Profile() {
+  const { user } = useAuth();
   const [athlete, setAthlete] = useState<Athlete | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
+      if (!user) return;
       try {
-        const userProfile = await api.getAthleteProfile('a1');
+        const userProfile = await api.getAthleteProfile(user.id);
         setAthlete(userProfile);
-      } catch (e) {
+        setError(null);
+      } catch (e: any) {
         console.error(e);
+        setError(e.message || "Failed to load profile data");
       } finally {
         setIsLoading(false);
       }
     }
     loadData();
-  }, []);
+  }, [user]);
 
-  if (isLoading) return <div className="p-8 text-center text-slate-500">Loading Profile...</div>;
-  if (!athlete) return <div className="p-8 text-center text-red-500">Failed to load profile.</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !athlete) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Card className="w-full max-w-md border-red-100 bg-red-50">
+          <CardContent className="pt-6 text-center text-red-600">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <h3 className="text-lg font-bold mb-2">Failed to load profile</h3>
+            <p className="text-sm opacity-80">{error || "Could not retrieve athlete data."}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <Card>
-        <CardContent className="p-8 flex flex-col md:flex-row items-center gap-8">
-          <div className="h-32 w-32 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
-            <User className="h-16 w-16 text-slate-400" />
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
+      {/* Header Profile Card */}
+      <Card className="border-0 shadow-md bg-gradient-to-r from-slate-900 to-slate-800 text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-32 bg-primary-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <CardContent className="p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10">
+          <div className="h-32 w-32 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 border-4 border-white/20 backdrop-blur-sm">
+            <User className="h-16 w-16 text-white" />
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-slate-900">{athlete.name}</h1>
-            <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-slate-600">
-              <span className="flex items-center gap-1">
-                <User className="h-4 w-4" /> {athlete.gender}, {athlete.age} yrs
+            <h1 className="text-4xl font-extrabold">{athlete.name}</h1>
+            <div className="mt-3 flex flex-wrap items-center justify-center md:justify-start gap-6 text-slate-300 font-medium">
+              <span className="flex items-center gap-2">
+                <User className="h-5 w-5 opacity-70" /> {athlete.gender}, {athlete.age} yrs
               </span>
-              <span className="flex items-center gap-1">
-                <MapPin className="h-4 w-4" /> {athlete.district}, {athlete.state}
+              <span className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 opacity-70" /> {athlete.district}, {athlete.state}
               </span>
             </div>
-            <div className="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+            <div className="mt-6 flex flex-wrap gap-2 justify-center md:justify-start">
               {athlete.sportsInterest.map(sport => (
-                <Badge key={sport} variant="neutral">{sport}</Badge>
+                <span key={sport} className="px-3 py-1 bg-white/10 rounded-full text-sm font-medium border border-white/20 backdrop-blur-sm">
+                  {sport}
+                </span>
               ))}
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-primary-600" />
-              Performance Summary
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-slate-100">
-              <span className="text-slate-600">Overall Score</span>
-              <span className="font-semibold text-slate-900">{athlete.overallScore}/100</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-slate-100">
-              <span className="text-slate-600">National Percentile</span>
-              <span className="font-semibold text-slate-900">{athlete.percentile}th</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-slate-600">Current Rank</span>
-              <span className="font-semibold text-slate-900">#{athlete.rank}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Badges & Achievements</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-3">
-              {athlete.badges.map(badge => (
-                <div key={badge} className="px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2 text-yellow-800 font-medium text-sm">
-                  <Award className="h-4 w-4" />
-                  {badge}
-                </div>
-              ))}
-              {athlete.badges.length === 0 && (
-                <p className="text-slate-500 text-sm">No badges earned yet. Complete assessments to earn badges!</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard 
+          title="Overall Score" 
+          value={athlete.overallScore} 
+          icon={Activity} 
+          iconColorClass="text-blue-600" 
+          iconBgClass="bg-blue-100" 
+        />
+        <StatCard 
+          title="Percentile" 
+          value={`${athlete.percentile}th`} 
+          icon={TrendingUp} 
+          iconColorClass="text-green-600" 
+          iconBgClass="bg-green-100" 
+        />
+        <StatCard 
+          title="Current Rank" 
+          value={`#${athlete.rank}`} 
+          icon={Trophy} 
+          iconColorClass="text-purple-600" 
+          iconBgClass="bg-purple-100" 
+        />
       </div>
+
+      <Card>
+        <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4 pt-6 px-6">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Award className="h-6 w-6 text-orange-500" />
+            Badges & Achievements
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="flex flex-wrap gap-4">
+            {athlete.badges.map(badge => (
+              <div key={badge} className="px-5 py-3 bg-orange-50 border border-orange-200 rounded-xl flex items-center gap-3 text-orange-800 font-semibold shadow-sm">
+                <Award className="h-5 w-5 text-orange-600" />
+                {badge}
+              </div>
+            ))}
+            {athlete.badges.length === 0 && (
+              <div className="w-full text-center py-8">
+                <div className="mx-auto w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                  <Award className="h-8 w-8 text-slate-300" />
+                </div>
+                <p className="text-slate-500 font-medium">No badges earned yet.</p>
+                <p className="text-sm text-slate-400 mt-1">Complete assessments to unlock achievements!</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

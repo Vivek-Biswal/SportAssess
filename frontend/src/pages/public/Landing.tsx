@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/common/Button';
 import { Card, CardContent } from '../../components/common/Card';
+import { Badge } from '../../components/common/Badge';
 import { Activity, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 
 export function Landing() {
@@ -9,8 +10,10 @@ export function Landing() {
     <div className="flex flex-col pb-16 overflow-hidden">
       {/* Hero Section */}
       <section className="pt-20 pb-12 text-center flex flex-col items-center bg-white border-b border-slate-200 shadow-sm">
-        <div className="animate-fade-in inline-flex items-center rounded-full px-4 py-1.5 text-sm font-semibold text-primary-700 bg-primary-50 mb-8 border border-primary-200">
-          <ShieldCheck className="w-4 h-4 mr-2" /> SAI-Aligned Standardized Testing
+        <div className="animate-fade-in mb-8">
+          <Badge variant="default" className="rounded-full px-4 py-1.5 text-sm font-semibold border border-primary-200">
+            <ShieldCheck className="w-4 h-4 mr-2" /> SAI-Aligned Standardized Testing
+          </Badge>
         </div>
         <h1 className="animate-slide-up text-5xl md:text-6xl font-extrabold tracking-tight max-w-4xl mb-6 text-slate-900">
           AI-Powered <span className="text-primary-600">Sports Talent Assessment</span>

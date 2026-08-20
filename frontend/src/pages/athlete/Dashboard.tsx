@@ -3,140 +3,162 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
+import { StatCard } from '../../components/common/StatCard';
+import { SectionHeading } from '../../components/common/SectionHeading';
+import { PerformanceAnalytics } from '../../components/athlete/PerformanceAnalytics';
 import { api } from '../../services/api';
 import { Athlete, AssessmentResult } from '../../types';
-import { Activity, Award, Trophy, Timer, TrendingUp } from 'lucide-react';
+import { Activity, Award, Trophy, Timer, TrendingUp, AlertCircle } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export function Dashboard() {
+  const { user } = useAuth();
   const [athlete, setAthlete] = useState<Athlete | null>(null);
   const [results, setResults] = useState<AssessmentResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
+      if (!user) return;
       try {
-        const userProfile = await api.getAthleteProfile('a1');
-        const userResults = await api.getAthleteResults('a1');
+        const userProfile = await api.getAthleteProfile(user.id);
+        const userResults = await api.getAthleteResults(user.id);
         setAthlete(userProfile);
         setResults(userResults);
-      } catch (e) {
+        setError(null);
+      } catch (e: any) {
         console.error(e);
+        setError(e.message || "Failed to load dashboard data");
       } finally {
         setIsLoading(false);
       }
     }
     loadData();
-  }, []);
+  }, [user]);
 
-  if (isLoading) return <div className="p-8 text-center text-slate-500">Loading Dashboard...</div>;
-  if (!athlete) return <div className="p-8 text-center text-red-500">Failed to load profile.</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !athlete) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Card className="w-full max-w-md border-red-100 bg-red-50">
+          <CardContent className="pt-6 text-center text-red-600">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <h3 className="text-lg font-bold mb-2">Failed to load profile</h3>
+            <p className="text-sm opacity-80">{error || "Could not retrieve athlete data."}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Welcome back, {athlete.name}</h1>
-          <p className="text-slate-500">Here is your performance overview</p>
+          <h1 className="text-3xl font-bold text-slate-900">Welcome back, {athlete.name}</h1>
+          <p className="text-slate-500 mt-1">Here is your performance overview</p>
         </div>
         <Link to="/assessments">
-          <Button>Start New Assessment</Button>
+          <Button size="lg" className="shadow-sm">Start New Assessment</Button>
         </Link>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard 
+          title="Overall Score" 
+          value={athlete.overallScore} 
+          icon={Activity} 
+          iconColorClass="text-blue-600" 
+          iconBgClass="bg-blue-100" 
+        />
+        <StatCard 
+          title="Percentile" 
+          value={`${athlete.percentile}th`} 
+          icon={TrendingUp} 
+          iconColorClass="text-green-600" 
+          iconBgClass="bg-green-100" 
+        />
+        <StatCard 
+          title="Current Rank" 
+          value={`#${athlete.rank}`} 
+          icon={Trophy} 
+          iconColorClass="text-purple-600" 
+          iconBgClass="bg-purple-100" 
+        />
+        <StatCard 
+          title="Badges Earned" 
+          value={athlete.badges.length} 
+          icon={Award} 
+          iconColorClass="text-orange-600" 
+          iconBgClass="bg-orange-100" 
+        />
+      </div>
+
+      <PerformanceAnalytics results={results} />
+
+      {/* Recent Assessments */}
+      <div className="pt-4">
+        <SectionHeading title="Recent Assessments" description="Your latest verified test results." />
         <Card>
-          <CardContent className="p-6 flex items-center space-x-4">
-            <div className="p-3 bg-blue-100 rounded-lg"><Activity className="text-blue-600 h-6 w-6" /></div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">Overall Score</p>
-              <h3 className="text-2xl font-bold text-slate-900">{athlete.overallScore}</h3>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 flex items-center space-x-4">
-            <div className="p-3 bg-green-100 rounded-lg"><TrendingUp className="text-green-600 h-6 w-6" /></div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">Percentile</p>
-              <h3 className="text-2xl font-bold text-slate-900">{athlete.percentile}th</h3>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 flex items-center space-x-4">
-            <div className="p-3 bg-purple-100 rounded-lg"><Trophy className="text-purple-600 h-6 w-6" /></div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">Current Rank</p>
-              <h3 className="text-2xl font-bold text-slate-900">#{athlete.rank}</h3>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 flex items-center space-x-4">
-            <div className="p-3 bg-orange-100 rounded-lg"><Award className="text-orange-600 h-6 w-6" /></div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">Badges Earned</p>
-              <h3 className="text-2xl font-bold text-slate-900">{athlete.badges.length}</h3>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                    <th className="py-4 px-6">Test</th>
+                    <th className="py-4 px-6">Date</th>
+                    <th className="py-4 px-6">Score</th>
+                    <th className="py-4 px-6">Verification</th>
+                    <th className="py-4 px-6 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.map((result) => (
+                    <tr key={result.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/80 transition-colors">
+                      <td className="py-4 px-6 font-medium text-slate-900">
+                        {result.testId === 't1' ? 'Vertical Jump' : 'Sit-Ups'}
+                      </td>
+                      <td className="py-4 px-6 text-slate-600">
+                        {new Date(result.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </td>
+                      <td className="py-4 px-6 text-slate-900 font-bold">
+                        {result.score} <span className="text-slate-500 font-normal text-sm">{result.unit}</span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <Badge variant={result.verificationStatus === 'Verified' ? 'success' : 'warning'}>
+                          {result.verificationStatus}
+                        </Badge>
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <Link to={`/result/${result.id}`}>
+                          <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700 hover:bg-primary-50">View Details</Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                  {results.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-slate-500">
+                        No assessments completed yet. Start an assessment to see your history!
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Recent Assessments */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Assessments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 text-sm font-medium text-slate-500">
-                  <th className="pb-3 px-4">Test</th>
-                  <th className="pb-3 px-4">Date</th>
-                  <th className="pb-3 px-4">Score</th>
-                  <th className="pb-3 px-4">Verification</th>
-                  <th className="pb-3 px-4">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((result) => (
-                  <tr key={result.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
-                    <td className="py-4 px-4 font-medium text-slate-900">
-                      {result.testId === 't1' ? 'Vertical Jump' : 'Sit-Ups'}
-                    </td>
-                    <td className="py-4 px-4 text-slate-600">
-                      {new Date(result.date).toLocaleDateString()}
-                    </td>
-                    <td className="py-4 px-4 text-slate-900 font-semibold">
-                      {result.score} {result.unit}
-                    </td>
-                    <td className="py-4 px-4">
-                      <Badge variant={result.verificationStatus === 'Verified' ? 'success' : 'warning'}>
-                        {result.verificationStatus}
-                      </Badge>
-                    </td>
-                    <td className="py-4 px-4">
-                      <Link to={`/result/${result.id}`}>
-                        <Button variant="ghost" size="sm">View</Button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-                {results.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-500">
-                      No assessments completed yet.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
