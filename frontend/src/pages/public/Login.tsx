@@ -47,8 +47,22 @@ export function Login() {
                 {error}
               </div>
             )}
-            <Input label="Email Address" type="email" placeholder="you@example.com" required />
-            <Input label="Password" type="password" placeholder="••••••••" required />
+            <Input 
+              label="Email Address" 
+              type="email" 
+              placeholder="you@example.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
+            <Input 
+              label="Password" 
+              type="password" 
+              placeholder="••••••••" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
             
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
