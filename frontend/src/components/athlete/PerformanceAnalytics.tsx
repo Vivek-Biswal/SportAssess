@@ -24,13 +24,13 @@ export function PerformanceAnalytics({ results }: Props) {
     return (
       <div className="mt-8">
         <SectionHeading title="Performance Analytics" description="Track your progress over time." />
-        <Card className="bg-slate-50 border-dashed border-2 border-slate-200">
+        <Card className="bg-bg-base border-dashed border-2 border-border-subtle">
           <CardContent className="p-12 text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-              <Activity className="h-8 w-8 text-slate-400" />
+            <div className="w-16 h-16 bg-bg-surface rounded-full flex items-center justify-center mb-4">
+              <Activity className="h-8 w-8 text-text-secondary opacity-50" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">No data available yet</h3>
-            <p className="text-slate-500 max-w-sm mb-6">
+            <h3 className="text-lg font-bold text-text-primary mb-2">No data available yet</h3>
+            <p className="text-text-secondary max-w-sm mb-6">
               Take your first assessment to unlock detailed analytics, benchmark comparisons, and trend tracking.
             </p>
           </CardContent>
@@ -87,7 +87,7 @@ export function PerformanceAnalytics({ results }: Props) {
         </Card>
 
         <div className="space-y-6">
-          <Card className="bg-primary-600 text-white border-primary-700">
+          <Card className="bg-primary-600 dark:bg-primary-800 text-white border-primary-700 dark:border-primary-900">
             <CardContent className="p-6">
               <p className="text-primary-100 text-sm font-medium mb-1">Latest Assessment</p>
               <div className="flex items-end gap-2">
@@ -103,23 +103,23 @@ export function PerformanceAnalytics({ results }: Props) {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-500 font-medium">SAI Benchmark Target</CardTitle>
+              <CardTitle className="text-sm text-text-secondary font-medium">SAI Benchmark Target</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-end gap-2 mb-2">
-                <span className="text-2xl font-bold text-slate-900">
+                <span className="text-2xl font-bold text-text-primary">
                   {/* Mock benchmark target for demo */}
                   {Math.round(bestScore * 1.15)}
                 </span>
-                <span className="text-slate-500 text-sm mb-1">{unit}</span>
+                <span className="text-text-secondary text-sm mb-1">{unit}</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2">
+              <div className="w-full bg-border-subtle rounded-full h-2">
                 <div 
                   className="bg-green-500 h-2 rounded-full" 
                   style={{ width: `${Math.min((latestScore / (bestScore * 1.15)) * 100, 100)}%` }}
                 ></div>
               </div>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-text-secondary mt-2">
                 You are {(100 - (latestScore / (bestScore * 1.15)) * 100).toFixed(1)}% away from the next tier.
               </p>
             </CardContent>

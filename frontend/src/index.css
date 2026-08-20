@@ -12,6 +12,13 @@
   --color-primary-700: #334e68;
   --color-primary-800: #243b53;
   --color-primary-900: #102a43;
+
+  /* Semantic Theme Tokens */
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-subtle: var(--border-subtle);
   
   --font-sans: 'Inter', system-ui, sans-serif;
 
@@ -19,6 +26,28 @@
   --animate-fade-in: fade-in 0.5s ease-out;
   --animate-slide-up: slide-up 0.5s ease-out;
   --animate-pulse-soft: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@layer base {
+  :root {
+    --bg-base: #f8fafc; /* slate-50 */
+    --bg-surface: #ffffff; /* white */
+    --text-primary: #0f172a; /* slate-900 */
+    --text-secondary: #64748b; /* slate-500 */
+    --border-subtle: #e2e8f0; /* slate-200 */
+  }
+
+  .dark {
+    --bg-base: #0f172a; /* slate-900 */
+    --bg-surface: #1e293b; /* slate-800 */
+    --text-primary: #f8fafc; /* slate-50 */
+    --text-secondary: #94a3b8; /* slate-400 */
+    --border-subtle: #334155; /* slate-700 */
+  }
+
+  body {
+    @apply bg-bg-base text-text-primary antialiased selection:bg-primary-500/30 selection:text-primary-900 dark:selection:text-primary-100;
+  }
 }
 
 @keyframes fade-in {
@@ -36,18 +65,14 @@
   50% { opacity: 0.8; transform: scale(0.98); }
 }
 
-@layer base {
-  body {
-    @apply bg-slate-50 text-slate-900 antialiased selection:bg-primary-200 selection:text-primary-900;
-  }
-}
-
 @layer utilities {
   .glass-panel {
-    @apply bg-white border border-slate-200 shadow-sm;
+    @apply bg-bg-surface border border-border-subtle shadow-sm;
   }
   
   .glass-card {
-    @apply bg-white border border-slate-200 shadow-sm transition-all duration-300;
+    @apply bg-bg-surface border border-border-subtle shadow-sm transition-all duration-300;
   }
 }
+
+

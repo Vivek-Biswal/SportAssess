@@ -9,16 +9,16 @@ export function Landing() {
   return (
     <div className="flex flex-col pb-16 overflow-hidden">
       {/* Hero Section */}
-      <section className="pt-20 pb-12 text-center flex flex-col items-center bg-white border-b border-slate-200 shadow-sm">
+      <section className="pt-20 pb-12 text-center flex flex-col items-center bg-bg-surface border-b border-border-subtle shadow-sm transition-colors duration-300">
         <div className="animate-fade-in mb-8">
-          <Badge variant="default" className="rounded-full px-4 py-1.5 text-sm font-semibold border border-primary-200">
+          <Badge variant="default" className="rounded-full px-4 py-1.5 text-sm font-semibold border border-primary-200 dark:border-primary-800">
             <ShieldCheck className="w-4 h-4 mr-2" /> SAI-Aligned Standardized Testing
           </Badge>
         </div>
-        <h1 className="animate-slide-up text-5xl md:text-6xl font-extrabold tracking-tight max-w-4xl mb-6 text-slate-900">
-          AI-Powered <span className="text-primary-600">Sports Talent Assessment</span>
+        <h1 className="animate-slide-up text-5xl md:text-6xl font-extrabold tracking-tight max-w-4xl mb-6 text-text-primary">
+          AI-Powered <span className="text-primary-600 dark:text-primary-400">Sports Talent Assessment</span>
         </h1>
-        <p className="animate-slide-up text-lg text-slate-600 max-w-2xl mb-10 leading-relaxed" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
+        <p className="animate-slide-up text-lg text-text-secondary max-w-2xl mb-10 leading-relaxed" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
           An objective, computer-vision based measurement instrument for sports talent identification. 
           Conduct verifiable standardized fitness tests with demographic benchmarking and automated integrity checks.
         </p>
@@ -27,26 +27,26 @@ export function Landing() {
             <Button size="lg" className="w-full sm:w-auto shadow-sm">Start Assessment</Button>
           </Link>
           <Link to="/how-it-works">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white">View Measurement Protocol</Button>
+            <Button variant="outline" size="lg" className="w-full sm:w-auto bg-bg-surface">View Measurement Protocol</Button>
           </Link>
         </div>
       </section>
 
       {/* Trust Strip */}
-      <section className="bg-slate-50 border-b border-slate-200 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-8 md:gap-16 text-sm font-medium text-slate-500">
-          <div className="flex items-center"><ShieldCheck className="w-4 h-4 mr-2 text-slate-400" /> End-to-end Data Privacy</div>
-          <div className="flex items-center"><Activity className="w-4 h-4 mr-2 text-slate-400" /> SAI Benchmark Aligned</div>
-          <div className="flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-slate-400" /> Age & Gender Normalized</div>
-          <div className="flex items-center"><Users className="w-4 h-4 mr-2 text-slate-400" /> Low-bandwidth Optimized</div>
+      <section className="bg-bg-base border-b border-border-subtle py-6 transition-colors duration-300">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-8 md:gap-16 text-sm font-medium text-text-secondary">
+          <div className="flex items-center"><ShieldCheck className="w-4 h-4 mr-2 opacity-70" /> End-to-end Data Privacy</div>
+          <div className="flex items-center"><Activity className="w-4 h-4 mr-2 opacity-70" /> SAI Benchmark Aligned</div>
+          <div className="flex items-center"><TrendingUp className="w-4 h-4 mr-2 opacity-70" /> Age & Gender Normalized</div>
+          <div className="flex items-center"><Users className="w-4 h-4 mr-2 opacity-70" /> Low-bandwidth Optimized</div>
         </div>
       </section>
 
       {/* Visual Flow / Product Screenshot Mock */}
       <section className="py-16 max-w-6xl mx-auto px-4 w-full">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Verifiable Computer Vision Pipeline</h2>
-          <p className="text-slate-600 max-w-2xl mx-auto">Our platform processes video capture directly on-device or via cloud, generating standardized pose-keypoint data to ensure fair and accurate scoring.</p>
+          <h2 className="text-3xl font-bold text-text-primary mb-4">Verifiable Computer Vision Pipeline</h2>
+          <p className="text-text-secondary max-w-2xl mx-auto">Our platform processes video capture directly on-device or via cloud, generating standardized pose-keypoint data to ensure fair and accurate scoring.</p>
         </div>
         
         <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-2xl relative aspect-video flex items-center justify-center max-w-4xl mx-auto group">

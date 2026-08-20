@@ -64,8 +64,8 @@ export function Dashboard() {
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Welcome back, {athlete.name}</h1>
-          <p className="text-slate-500 mt-1">Here is your performance overview</p>
+          <h1 className="text-3xl font-bold text-text-primary">Welcome back, {athlete.name}</h1>
+          <p className="text-text-secondary mt-1">Here is your performance overview</p>
         </div>
         <Link to="/assessments">
           <Button size="lg" className="shadow-sm">Start New Assessment</Button>
@@ -78,29 +78,29 @@ export function Dashboard() {
           title="Overall Score" 
           value={athlete.overallScore} 
           icon={Activity} 
-          iconColorClass="text-blue-600" 
-          iconBgClass="bg-blue-100" 
+          iconColorClass="text-blue-600 dark:text-blue-400" 
+          iconBgClass="bg-blue-100 dark:bg-blue-900/30" 
         />
         <StatCard 
           title="Percentile" 
           value={`${athlete.percentile}th`} 
           icon={TrendingUp} 
-          iconColorClass="text-green-600" 
-          iconBgClass="bg-green-100" 
+          iconColorClass="text-green-600 dark:text-green-400" 
+          iconBgClass="bg-green-100 dark:bg-green-900/30" 
         />
         <StatCard 
           title="Current Rank" 
           value={`#${athlete.rank}`} 
           icon={Trophy} 
-          iconColorClass="text-purple-600" 
-          iconBgClass="bg-purple-100" 
+          iconColorClass="text-purple-600 dark:text-purple-400" 
+          iconBgClass="bg-purple-100 dark:bg-purple-900/30" 
         />
         <StatCard 
           title="Badges Earned" 
           value={athlete.badges.length} 
           icon={Award} 
-          iconColorClass="text-orange-600" 
-          iconBgClass="bg-orange-100" 
+          iconColorClass="text-orange-600 dark:text-orange-400" 
+          iconBgClass="bg-orange-100 dark:bg-orange-900/30" 
         />
       </div>
 
@@ -114,7 +114,7 @@ export function Dashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  <tr className="bg-bg-base/50 border-b border-border-subtle text-sm font-semibold text-text-secondary uppercase tracking-wider">
                     <th className="py-4 px-6">Test</th>
                     <th className="py-4 px-6">Date</th>
                     <th className="py-4 px-6">Score</th>
@@ -124,15 +124,15 @@ export function Dashboard() {
                 </thead>
                 <tbody>
                   {results.map((result) => (
-                    <tr key={result.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/80 transition-colors">
-                      <td className="py-4 px-6 font-medium text-slate-900">
+                    <tr key={result.id} className="border-b border-border-subtle last:border-0 hover:bg-bg-base transition-colors">
+                      <td className="py-4 px-6 font-medium text-text-primary">
                         {result.testId === 't1' ? 'Vertical Jump' : 'Sit-Ups'}
                       </td>
-                      <td className="py-4 px-6 text-slate-600">
+                      <td className="py-4 px-6 text-text-secondary">
                         {new Date(result.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                       </td>
-                      <td className="py-4 px-6 text-slate-900 font-bold">
-                        {result.score} <span className="text-slate-500 font-normal text-sm">{result.unit}</span>
+                      <td className="py-4 px-6 text-text-primary font-bold">
+                        {result.score} <span className="text-text-secondary font-normal text-sm">{result.unit}</span>
                       </td>
                       <td className="py-4 px-6">
                         <Badge variant={result.verificationStatus === 'Verified' ? 'success' : 'warning'}>
@@ -141,14 +141,14 @@ export function Dashboard() {
                       </td>
                       <td className="py-4 px-6 text-right">
                         <Link to={`/result/${result.id}`}>
-                          <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700 hover:bg-primary-50">View Details</Button>
+                          <Button variant="ghost" size="sm" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20">View Details</Button>
                         </Link>
                       </td>
                     </tr>
                   ))}
                   {results.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-500">
+                      <td colSpan={5} className="py-12 text-center text-text-secondary">
                         No assessments completed yet. Start an assessment to see your history!
                       </td>
                     </tr>
