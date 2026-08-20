@@ -9,7 +9,7 @@ import { useToast } from '../../context/ToastContext';
 
 export function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, continueAsGuest } = useAuth();
   const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -85,7 +85,10 @@ export function Login() {
               </div>
             </div>
 
-            <Button type="button" variant="outline" className="w-full" onClick={() => navigate('/')}>
+            <Button type="button" variant="outline" className="w-full" onClick={() => {
+              continueAsGuest();
+              navigate('/');
+            }}>
               Continue as Guest
             </Button>
             
