@@ -13,14 +13,35 @@
   --color-primary-800: #243b53;
   --color-primary-900: #102a43;
 
+<<<<<<< HEAD
   /* Semantic Theme Tokens */
   --color-bg-base: var(--bg-base);
   --color-bg-surface: var(--bg-surface);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-border-subtle: var(--border-subtle);
+=======
+  /* Semantic Colors */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+>>>>>>> 0df999fa31251bd208894aa352bf36d9d15aed9a
   
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Custom Animations */
   --animate-fade-in: fade-in 0.5s ease-out;
@@ -65,6 +86,7 @@
   50% { opacity: 0.8; transform: scale(0.98); }
 }
 
+<<<<<<< HEAD
 @layer utilities {
   .glass-panel {
     @apply bg-bg-surface border border-border-subtle shadow-sm;
@@ -72,6 +94,30 @@
   
   .glass-card {
     @apply bg-bg-surface border border-border-subtle shadow-sm transition-all duration-300;
+=======
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-primary-200 selection:text-primary-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-slate-900 tracking-tight;
+  }
+  
+  h1 { @apply text-4xl md:text-5xl; }
+  h2 { @apply text-3xl md:text-4xl; }
+  h3 { @apply text-2xl md:text-3xl; }
+  h4 { @apply text-xl md:text-2xl; }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white border border-slate-200/80 shadow-sm rounded-xl;
+  }
+  
+  .glass-card {
+    @apply bg-white border border-slate-200/80 shadow-sm rounded-xl transition-all duration-200 hover:shadow-md;
+>>>>>>> 0df999fa31251bd208894aa352bf36d9d15aed9a
   }
 }
 
