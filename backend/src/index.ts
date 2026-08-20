@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS configuration
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
+  'https://sport-assess.vercel.app',
 ];
 
 app.use(
