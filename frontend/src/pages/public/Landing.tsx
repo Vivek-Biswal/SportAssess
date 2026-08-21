@@ -26,7 +26,6 @@ import {
 
 export function Landing() {
   return (
-<<<<<<< HEAD
     <div className="flex flex-col pb-16 overflow-hidden">
       {/* Hero Section */}
       <section className="pt-20 pb-12 text-center flex flex-col items-center bg-bg-surface border-b border-border-subtle shadow-sm transition-colors duration-300">
@@ -68,13 +67,6 @@ export function Landing() {
           <h2 className="text-3xl font-bold text-text-primary mb-4">Verifiable Computer Vision Pipeline</h2>
           <p className="text-text-secondary max-w-2xl mx-auto">Our platform processes video capture directly on-device or via cloud, generating standardized pose-keypoint data to ensure fair and accurate scoring.</p>
         </div>
-=======
-    <div className="flex flex-col overflow-hidden">
-      {/* ─── Hero Section ─── */}
-      <section className="relative pt-20 pb-24 text-center flex flex-col items-center bg-white border-b border-slate-200/80">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_rgba(100,116,139,0.06)_1px,_transparent_0)] bg-[length:32px_32px]" />
->>>>>>> 0df999fa31251bd208894aa352bf36d9d15aed9a
         
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
           <div className="animate-fade-in mb-6">

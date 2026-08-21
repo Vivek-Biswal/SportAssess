@@ -22,7 +22,15 @@ class AssessmentRunner:
             test_type
             .lower()
             .strip()
+            .replace(" ", "_")
         )
+
+        # Mapping variations from DB seed data to internal algorithm names
+        slug_map = {
+            "sit-ups_(1_min)": "situps",
+            "push-ups": "pushups"
+        }
+        test_type = slug_map.get(test_type, test_type)
 
         if test_type not in ASSESSMENT_REGISTRY:
             supported = ", ".join(

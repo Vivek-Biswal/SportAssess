@@ -22,7 +22,7 @@ export interface CVProcessingResponse {
 
 export interface ICVService {
   analyzeVideo(data: CVProcessingRequest): Promise<{ jobId: string }>;
-  getProcessingStatus(jobId: string): Promise<CVProcessingResponse | { processing_status: 'processing' }>;
+  getProcessingStatus(jobId: string): Promise<CVProcessingResponse | { processing_status: 'processing' | 'failed' }>;
 }
 
 class TeammateCVService implements ICVService {
@@ -39,57 +39,45 @@ class TeammateCVService implements ICVService {
 
   async analyzeVideo(data: CVProcessingRequest): Promise<{ jobId: string }> {
     try {
-      // In production, this would be a real fetch call:
-      /*
+      console.log(`[CVService] Requesting analysis start for assessment: ${data.assessmentId}`);
+      
       const response = await fetch(`${this.baseUrl}/api/analyze`, {
         method: 'POST',
         headers: this.headers,
         body: JSON.stringify(data)
       });
       
-      if (!response.ok) throw new Error('CV Service Error');
-      return await response.json();
-      */
-
-      console.log(`[CVService] Simulating analysis start for assessment: ${data.assessmentId}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`CV Service Error: ${response.status} ${errorText}`);
+      }
       
-      // Mock implementation returning a fake job ID
-      return { jobId: `cv_job_${Date.now()}` };
+      const responseData = await response.json();
+      return responseData as { jobId: string };
     } catch (error) {
       console.error('[CVService] Failed to start analysis:', error);
       throw error;
     }
   }
 
-  async getProcessingStatus(jobId: string): Promise<CVProcessingResponse | { processing_status: 'processing' }> {
+  async getProcessingStatus(jobId: string): Promise<CVProcessingResponse | { processing_status: 'processing' | 'failed' }> {
     try {
-       // In production, this would be a real fetch call:
-      /*
+      console.log(`[CVService] Checking status for job: ${jobId}`);
+      
       const response = await fetch(`${this.baseUrl}/api/status/${jobId}`, {
         headers: this.headers
       });
       
-      if (!response.ok) throw new Error('CV Service Error');
-      return await response.json();
-      */
+      if (!response.ok) {
+        if (response.status === 404) {
+           return { processing_status: 'failed' };
+        }
+        const errorText = await response.text();
+        throw new Error(`CV Service Error: ${response.status} ${errorText}`);
+      }
       
-      console.log(`[CVService] Simulating status check for job: ${jobId}`);
-      
-      // Mock returning a completed status after a short delay
-      return {
-        test: 'vertical_jump',
-        score: 48.5,
-        unit: 'cm',
-        confidence: 0.94,
-        verification_status: 'verified',
-        cheat_detected: false,
-        cheat_score: 0.03,
-        duration: null,
-        reps: null,
-        benchmark: null,
-        percentile: null,
-        processing_status: 'success'
-      };
+      const responseData = await response.json();
+      return responseData as CVProcessingResponse | { processing_status: 'processing' | 'failed' };
     } catch (error) {
       console.error('[CVService] Failed to get status:', error);
       throw error;

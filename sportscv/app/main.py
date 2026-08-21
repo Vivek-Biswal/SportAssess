@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
 
 
+import os
+
 app = FastAPI(
     title="Sports CV Assessment API",
     description=(
@@ -13,14 +15,11 @@ app = FastAPI(
     version="0.1.0",
 )
 
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5000,http://localhost:5173").split(",")
 
-# Development CORS.
-#
-# Later, we will replace "*" with your
-# actual frontend domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
