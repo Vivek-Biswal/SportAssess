@@ -241,7 +241,7 @@ export function StepUpload({ onUpload, onBack, fileInputRef }: Props) {
         
         <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mb-6 relative z-10">
           <Film className="w-4 h-4" />
-          <span>MP4, MOV, or WebM (Max 50MB)</span>
+          <span>MP4, MOV, or WebM (Max 4.5MB)</span>
         </div>
 
         <input 

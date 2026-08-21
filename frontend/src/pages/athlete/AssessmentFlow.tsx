@@ -37,8 +37,8 @@ export function AssessmentFlow() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && (file.type.startsWith('video/') || file.type === 'video/mp4' || file.type === 'video/quicktime')) {
-      if (file.size > 50 * 1024 * 1024) {
-        showToast('File size exceeds 50MB limit.', 'error');
+      if (file.size > 4.5 * 1024 * 1024) {
+        showToast('File size exceeds 4.5MB limit. Vercel deployments require smaller files.', 'error');
         return;
       }
       
