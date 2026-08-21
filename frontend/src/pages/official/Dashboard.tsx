@@ -36,14 +36,6 @@ export function Dashboard() {
     loadData();
   }, []);
 
-  const chartData = [
-    { name: 'Maharashtra', athletes: 4000 },
-    { name: 'Delhi', athletes: 3000 },
-    { name: 'Gujarat', athletes: 2000 },
-    { name: 'Karnataka', athletes: 2780 },
-    { name: 'Kerala', athletes: 1890 },
-  ];
-
   if (isLoading || !stats) return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
@@ -129,16 +121,8 @@ export function Dashboard() {
           <CardHeader>
             <CardTitle>Top Participating States</CardTitle>
           </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                <Tooltip cursor={{ fill: '#f1f5f9' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                <Bar dataKey="athletes" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent className="h-72 flex items-center justify-center border-t border-slate-100">
+            <p className="text-slate-500 text-sm">Detailed demographic analytics coming soon.</p>
           </CardContent>
         </Card>
 

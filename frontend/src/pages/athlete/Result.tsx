@@ -116,7 +116,11 @@ export function Result() {
                   <BarChart2 className="w-5 h-5 mr-2 text-primary-600" /> Assessment Notes
                 </h4>
                 <p className="text-slate-600 mb-6 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
-                  Based on computer vision analysis of your movement, your takeoff phase was explosive, but arm swing coordination could be improved for an extra 2-3cm gain.
+                  {result.cheatDetected 
+                    ? "Our AI detected an anomaly during your assessment. Please review the footage and ensure you follow all protocol guidelines."
+                    : result.verificationStatus === 'Verified'
+                    ? "Your assessment has been successfully verified by our computer vision model. Good work!"
+                    : "Your assessment is currently pending manual review or further verification."}
                 </p>
                 <div className="flex gap-3">
                   <Button variant="outline" className="bg-white"><BarChart2 className="w-4 h-4 mr-2"/> Download Report</Button>
