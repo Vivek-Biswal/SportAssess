@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../common/Card';
-import { SectionHeading } from '../common/SectionHeading';
+import { Card, CardContent } from '../common/Card';
 import { AssessmentResult } from '../../types';
-import { Activity } from 'lucide-react';
+import { Activity, TrendingUp, Target } from 'lucide-react';
 import {
   LineChart,
   Line,
@@ -14,23 +13,31 @@ import {
   Area,
   AreaChart
 } from 'recharts';
+import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   results: AssessmentResult[];
 }
 
 export function PerformanceAnalytics({ results }: Props) {
+  const { theme } = useTheme();
+  
   if (!results || results.length === 0) {
     return (
-      <div className="mt-8">
-        <SectionHeading title="Performance Analytics" description="Track your progress over time." />
-        <Card className="bg-bg-base border-dashed border-2 border-border-subtle">
-          <CardContent className="p-12 text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-bg-surface rounded-full flex items-center justify-center mb-4">
-              <Activity className="h-8 w-8 text-text-secondary opacity-50" />
+      <div className="pt-2">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">Performance Analytics</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Track your progress over time.</p>
+          </div>
+        </div>
+        <Card className="bg-slate-50/50 dark:bg-slate-800/30 border-dashed border-2 border-slate-200 dark:border-slate-700/50">
+          <CardContent className="p-16 text-center flex flex-col items-center">
+            <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center mb-6">
+              <Activity className="h-10 w-10 text-slate-300 dark:text-slate-500" />
             </div>
-            <h3 className="text-lg font-bold text-text-primary mb-2">No data available yet</h3>
-            <p className="text-text-secondary max-w-sm mb-6">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">No data available yet</h3>
+            <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6 font-medium">
               Take your first assessment to unlock detailed analytics, benchmark comparisons, and trend tracking.
             </p>
           </CardContent>
@@ -46,82 +53,131 @@ export function PerformanceAnalytics({ results }: Props) {
   const chartData = sortedResults.map(r => ({
     date: new Date(r.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
     score: r.score,
-    test: r.testId === 't1' ? 'Vertical Jump' : 'Sit-Ups'
+    test: (r as any).test?.name || 'Assessment'
   }));
 
   // Just a simple heuristic for highest/latest
   const bestScore = Math.max(...sortedResults.map(r => r.score));
   const latestScore = sortedResults[sortedResults.length - 1].score;
   const unit = sortedResults[0].unit;
+  
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-900 dark:bg-slate-800 text-white p-4 rounded-xl shadow-xl border border-slate-800 dark:border-slate-700">
+          <p className="text-slate-400 text-xs font-semibold mb-1 uppercase tracking-wider">{label}</p>
+          <p className="text-xl font-bold">
+            {payload[0].value} <span className="text-slate-400 text-sm font-medium">{unit}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const chartStrokeColor = theme === 'dark' ? '#f8fafc' : '#0f172a';
+  const gridStrokeColor = theme === 'dark' ? '#334155' : '#f1f5f9';
 
   return (
-    <div className="mt-8 space-y-6">
-      <SectionHeading title="Performance Analytics" description="Your assessment history and benchmarks." />
+    <div className="pt-2">
+      <div className="flex justify-between items-end mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">Performance Analytics</h2>
+          <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Your assessment history and benchmarks.</p>
+        </div>
+      </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Score Trends</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-72 w-full">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <Card className="xl:col-span-2 rounded-2xl border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+          <CardContent className="p-6 h-full flex flex-col">
+            <div className="flex items-center gap-2 mb-6">
+              <TrendingUp className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+              <h3 className="font-bold text-slate-900 dark:text-slate-50 text-lg">Score Trends</h3>
+            </div>
+            <div className="h-72 w-full flex-grow">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                      <stop offset="5%" stopColor={chartStrokeColor} stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor={chartStrokeColor} stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridStrokeColor} />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 500}} 
+                    dy={10} 
                   />
-                  <Area type="monotone" dataKey="score" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorScore)" />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 500}} 
+                  />
+                  <Tooltip content={<CustomTooltip />} cursor={{ stroke: gridStrokeColor, strokeWidth: 1, strokeDasharray: '4 4' }} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="score" 
+                    stroke={chartStrokeColor} 
+                    strokeWidth={3} 
+                    fillOpacity={1} 
+                    fill="url(#colorScore)" 
+                    activeDot={{ r: 6, fill: chartStrokeColor, stroke: theme === 'dark' ? '#0f172a' : '#fff', strokeWidth: 2 }}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="bg-primary-600 dark:bg-primary-800 text-white border-primary-700 dark:border-primary-900">
-            <CardContent className="p-6">
-              <p className="text-primary-100 text-sm font-medium mb-1">Latest Assessment</p>
-              <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold">{latestScore}</span>
-                <span className="text-primary-200 mb-1 font-medium">{unit}</span>
+        <div className="space-y-6 flex flex-col">
+          <Card className="bg-slate-900 dark:bg-primary-900/40 border-0 dark:border dark:border-primary-800/50 text-white rounded-2xl shadow-md relative overflow-hidden flex-grow">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 dark:bg-primary-500/20 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <CardContent className="p-8 relative z-10 flex flex-col justify-between h-full">
+              <div>
+                <div className="flex items-center gap-2 mb-2 opacity-80">
+                  <Activity className="w-4 h-4 text-white dark:text-primary-300" />
+                  <p className="text-sm font-semibold uppercase tracking-wider text-white dark:text-primary-300">Latest Result</p>
+                </div>
+                <div className="flex items-baseline gap-2 mt-4">
+                  <span className="text-5xl font-extrabold tracking-tight text-white dark:text-primary-50">{latestScore}</span>
+                  <span className="text-slate-400 dark:text-primary-300 font-medium text-lg">{unit}</span>
+                </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-primary-500/50 flex justify-between items-center text-sm">
-                <span className="text-primary-100">Personal Best</span>
-                <span className="font-semibold">{bestScore} {unit}</span>
+              <div className="mt-8 pt-6 border-t border-white/10 dark:border-primary-800/50 flex justify-between items-center text-sm">
+                <span className="text-slate-400 dark:text-primary-300 font-medium">Personal Best</span>
+                <span className="font-bold text-white dark:text-primary-100 bg-white/10 dark:bg-primary-800/50 px-3 py-1 rounded-lg">{bestScore} {unit}</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-text-secondary font-medium">SAI Benchmark Target</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end gap-2 mb-2">
-                <span className="text-2xl font-bold text-text-primary">
-                  {/* Mock benchmark target for demo */}
-                  {Math.round(bestScore * 1.15)}
-                </span>
-                <span className="text-text-secondary text-sm mb-1">{unit}</span>
+          <Card className="rounded-2xl border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm flex-grow">
+            <CardContent className="p-8 flex flex-col justify-between h-full">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Target className="w-5 h-5 text-primary-500" />
+                  <h3 className="font-bold text-slate-900 dark:text-slate-50">SAI Benchmark Target</h3>
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
+                    {Math.round(bestScore * 1.15)}
+                  </span>
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">{unit}</span>
+                </div>
               </div>
-              <div className="w-full bg-border-subtle rounded-full h-2">
-                <div 
-                  className="bg-green-500 h-2 rounded-full" 
-                  style={{ width: `${Math.min((latestScore / (bestScore * 1.15)) * 100, 100)}%` }}
-                ></div>
+              <div>
+                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden mb-3">
+                  <div 
+                    className="bg-primary-600 h-full rounded-full transition-all duration-1000" 
+                    style={{ width: `${Math.min((latestScore / (bestScore * 1.15)) * 100, 100)}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  You are <strong className="text-slate-900 dark:text-slate-50">{(100 - (latestScore / (bestScore * 1.15)) * 100).toFixed(1)}%</strong> away from the next tier.
+                </p>
               </div>
-              <p className="text-xs text-text-secondary mt-2">
-                You are {(100 - (latestScore / (bestScore * 1.15)) * 100).toFixed(1)}% away from the next tier.
-              </p>
             </CardContent>
           </Card>
         </div>
