@@ -120,8 +120,8 @@ export const checkProcessStatus = async (req: AuthRequest, res: Response) => {
         aiConfidence: cvStatus.confidence,
         verificationStatus: cvStatus.verification_status === 'verified' ? 'Verified' : 'Manual Review',
         cheatDetected: cvStatus.cheat_detected,
-        benchmarkStatus: 'Not Set', // Handled later
-        percentile: 0, // Handled later
+        benchmarkStatus: cvStatus.benchmark ?? null,
+        percentile: cvStatus.percentile ?? null,
         videoUrl: assessment.videoUrl
       });
 

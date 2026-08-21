@@ -10,8 +10,8 @@ export interface IAssessmentResult extends Document {
   aiConfidence: number;
   verificationStatus: 'Verified' | 'Pending' | 'Rejected' | 'Manual Review';
   cheatDetected: boolean;
-  benchmarkStatus: 'Below Average' | 'Average' | 'Above Average' | 'Excellent' | 'Not Set';
-  percentile: number;
+  benchmarkStatus: 'Below Average' | 'Average' | 'Above Average' | 'Excellent' | 'Not Set' | null;
+  percentile: number | null;
   videoUrl?: string;
   
   createdAt: Date;
@@ -35,10 +35,10 @@ const AssessmentResultSchema: Schema = new Schema(
     cheatDetected: { type: Boolean, default: false },
     benchmarkStatus: { 
       type: String, 
-      enum: ['Below Average', 'Average', 'Above Average', 'Excellent', 'Not Set'],
-      default: 'Not Set' 
+      enum: ['Below Average', 'Average', 'Above Average', 'Excellent', 'Not Set', null],
+      default: null 
     },
-    percentile: { type: Number, default: 0 },
+    percentile: { type: Number, default: null },
     videoUrl: { type: String }
   },
   { 

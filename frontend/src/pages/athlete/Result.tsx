@@ -77,16 +77,11 @@ export function Result() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            {/* AI Annotated Frame Placeholder */}
+            {/* Visual Evidence Area */}
             <div className="relative w-full aspect-video bg-slate-900 overflow-hidden flex items-center justify-center">
-              <div className="absolute top-4 left-4 bg-black/60 backdrop-blur text-white/80 text-xs px-2 py-1 rounded border border-white/10 font-mono flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                AI KINEMATIC ANALYSIS
-              </div>
-              <div className="text-slate-500 flex flex-col items-center">
+              <div className="text-slate-500 flex flex-col items-center px-4 text-center">
                 <Video className="w-12 h-12 mb-2 opacity-50" />
-                <span className="text-sm font-medium">Video frame with pose keypoints will appear here</span>
-                <span className="text-xs bg-slate-800 px-2 py-1 rounded mt-2 text-slate-400 border border-slate-700">Pending backend integration (Annotated Frame API)</span>
+                <span className="text-sm font-medium">Visual evidence generation is not currently supported by the CV pipeline.</span>
               </div>
             </div>
 
@@ -107,7 +102,7 @@ export function Result() {
                      </Badge>
                   ) : (
                      <Badge variant="neutral" className="text-sm">
-                       <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-600 dark:text-green-400 inline" /> Integrity: Continuous Take Verified
+                       <CheckCircle2 className="w-4 h-4 mr-1.5 text-green-600 dark:text-green-400 inline" /> Integrity: {result.verificationStatus}
                      </Badge>
                   )}
                 </div>
@@ -137,40 +132,50 @@ export function Result() {
             <CardTitle>Benchmark</CardTitle>
           </CardHeader>
           <CardContent className="space-y-8 pt-6 flex-1 flex flex-col">
-            <div>
-              <p className="text-sm text-text-secondary mb-1 font-medium">Compared to Male, 18 yrs</p>
-              <p className="text-xl font-bold text-text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-primary-500 dark:from-primary-400 dark:to-primary-300">{result.benchmarkStatus}</p>
-            </div>
-            
-            <div className="flex-1">
-              <div className="flex justify-between text-sm mb-6">
-                <span className="font-medium text-text-primary">Percentile Rank</span>
-                <span className="font-extrabold text-primary-600 dark:text-primary-400 text-lg">{result.percentile}th</span>
-              </div>
-              
-              {/* Visual Performance Gauge */}
-              <div className="relative pt-4 pb-2 mb-2 group">
-                <div className="w-full h-3 bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 rounded-full shadow-inner"></div>
-                <div 
-                  className="absolute top-2 -translate-x-1/2 w-4 h-7 bg-text-primary rounded-[2px] border-2 border-bg-surface shadow-md transition-all duration-1000 ease-out"
-                  style={{ left: `${result.percentile}%` }}
-                >
-                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-text-primary text-bg-surface text-[10px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                    {result.percentile}
-                  </div>
+            {result.percentile !== null && result.percentile !== undefined ? (
+              <>
+                <div>
+                  <p className="text-sm text-text-secondary mb-1 font-medium">Demographic data unavailable</p>
+                  <p className="text-xl font-bold text-text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-primary-500 dark:from-primary-400 dark:to-primary-300">{result.benchmarkStatus || 'Calculated'}</p>
                 </div>
+                
+                <div className="flex-1">
+                  <div className="flex justify-between text-sm mb-6">
+                    <span className="font-medium text-text-primary">Percentile Rank</span>
+                    <span className="font-extrabold text-primary-600 dark:text-primary-400 text-lg">{result.percentile}th</span>
+                  </div>
+                  
+                  {/* Visual Performance Gauge */}
+                  <div className="relative pt-4 pb-2 mb-2 group">
+                    <div className="w-full h-3 bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 rounded-full shadow-inner"></div>
+                    <div 
+                      className="absolute top-2 -translate-x-1/2 w-4 h-7 bg-text-primary rounded-[2px] border-2 border-bg-surface shadow-md transition-all duration-1000 ease-out"
+                      style={{ left: `${result.percentile}%` }}
+                    >
+                      <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-text-primary text-bg-surface text-[10px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                        {result.percentile}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-text-secondary font-bold uppercase tracking-wider mt-2">
+                    <span>Poor</span>
+                    <span>Avg</span>
+                    <span>Good</span>
+                    <span>Elite</span>
+                  </div>
+                  
+                  <p className="text-sm text-text-secondary mt-6 leading-relaxed bg-primary-50/50 dark:bg-primary-900/20 p-3 rounded-lg border border-primary-100/50 dark:border-primary-800/50">
+                    You outperformed <strong className="text-text-primary">{result.percentile}%</strong> of athletes in your demographic.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center text-slate-500 py-10">
+                <BarChart2 className="w-12 h-12 mb-4 opacity-20" />
+                <p className="font-medium mb-1">Benchmark Unavailable</p>
+                <p className="text-sm">Demographic benchmarks are not currently configured for this assessment.</p>
               </div>
-              <div className="flex justify-between text-[11px] text-text-secondary font-bold uppercase tracking-wider mt-2">
-                <span>Poor</span>
-                <span>Avg</span>
-                <span>Good</span>
-                <span>Elite</span>
-              </div>
-              
-              <p className="text-sm text-text-secondary mt-6 leading-relaxed bg-primary-50/50 dark:bg-primary-900/20 p-3 rounded-lg border border-primary-100/50 dark:border-primary-800/50">
-                You outperformed <strong className="text-text-primary">{result.percentile}%</strong> of athletes in your demographic.
-              </p>
-            </div>
+            )}
 
             <div className="pt-4 border-t border-border-subtle mt-auto">
               <Link to="/benchmarks">
